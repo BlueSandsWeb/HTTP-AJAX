@@ -1,25 +1,29 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import Friend from "./components/Friend";
+import axios from "axios";
+
 class App extends Component {
+  constructor(){
+    super();
+    this.state = {
+      friends: ["tim"],
+    }
+  }
+
+  componentDidMount() {
+    console.log("CDM now running")
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {this.state.friends.map((friend) => {
+          return (
+            <Friend friend={friend} />
+          );
+        })}
       </div>
     );
   }
