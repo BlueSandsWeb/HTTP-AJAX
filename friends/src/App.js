@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from "axios";
-import uuidv4 from "uuid/v4";
 
 import Friend from "./components/Friend";
-import NewFriendForm from "./components/NewFriendForm";
+import FriendForm from "./components/FriendForm";
 
 class App extends Component {
   constructor(){
@@ -12,10 +11,12 @@ class App extends Component {
     this.state = {
       friends: [],
       error: "",
-      addFriendName: "",
-      friendId: 0,
-      friendAge: 0,
-      friendEmail: ''
+      name: "",
+      id: '',
+      age: '',
+      email: '',
+      update: false,
+      activeFriend: null,
     }
   }
 
@@ -46,24 +47,61 @@ class App extends Component {
   handleAddFriend = (e) => {
     e.preventDefault();
     const newFriend = {
-      name: this.state.addFriendName,
-      age: Number(this.state.friendAge),
-      email: this.state.friendEmail
+      name: this.state.name,
+      age: Number(this.state.age),
+      email: this.state.email
     }
     axios.post("http://localhost:5000/friends", newFriend)
       .then(res => {
         console.log(res.data);
         this.setState({
           friends: res.data,
-          addFriendName: "",
-          friendId: 0,
-          friendAge: 0,
-          friendEmail: ''
+          name: "",
+          id: '',
+          age: '',
+          email: ''
         });
       })
       .catch(err => {
         console.log(err);
       });
+  }
+
+  handleRemoveFriend = (e, id) => {
+    e.preventDefault();
+    axios.delete(`http://localhost:5000/friends/${id}`, id)
+      .then(res => {
+        this.setState({
+          friends: res.data
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  populateUpdateField = (e, friend) => {
+    e.preventDefault();
+    console.log(friend);
+    this.setState({
+      name: friend.name,
+      age: friend.age,
+      email: friend.email,
+      update: true,
+      activeFriend: friend.id,
+    })
+  }
+
+  resetUpdateField = (e) => {
+    e.preventDefault();
+    this.setState({
+      name: "",
+      id: '',
+      age: '',
+      email: '',
+      update: false,
+      activeFriend: null,
+    })
   }
 
   render() {
@@ -72,19 +110,25 @@ class App extends Component {
         <div className="cards-container">
           { this.state.friends.length === 0 ? <h3>You have no friends :(</h3> :
             this.state.friends.map((friend) => {
-            return (
-              <Friend friend={friend} key={uuidv4()} />
-            );
-          })}
+              return (
+                <Friend
+                  friend={friend}
+                  key={friend.id}
+                  removeFriend={this.handleRemoveFriend}
+                  populateUpdateField={this.populateUpdateField}
+                />
+                );
+              })}
         </div>
         <div className="form-container">
-          <NewFriendForm 
+          <FriendForm 
+            name={this.state.name}
+            age={this.state.age}
+            email={this.state.email} 
             handleChange={this.handleChange}
             handleAddFriend={this.handleAddFriend}
-            addFriendName={this.state.addFriendName}
-            friendId={this.state.friendId}
-            friendAge={this.state.friendAge}
-            friendEmail={this.state.friendEmail} />
+            resetUpdateField={this.resetUpdateField}
+            />
         </div>
       </div>
     );
