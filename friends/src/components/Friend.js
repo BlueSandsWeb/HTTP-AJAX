@@ -2,7 +2,11 @@ import React from 'react';
 
 function Friend(props) {
   return (
-    <p key={props.friend}>{props.friend}</p>
+    <div className="friend-card">
+      <h6 className="card-name">{props.friend.name}</h6>
+      <p className="card-age">{props.friend.age}</p>
+      <p className="card-email">{props.friend.email}</p>
+    </div>
   );
 }
 
