@@ -53,7 +53,6 @@ class App extends Component {
     }
     axios.post("http://localhost:5000/friends", newFriend)
       .then(res => {
-        console.log(res.data);
         this.setState({
           friends: res.data,
           name: "",
@@ -82,14 +81,37 @@ class App extends Component {
 
   populateUpdateField = (e, friend) => {
     e.preventDefault();
-    console.log(friend);
     this.setState({
+      id: friend.id,
       name: friend.name,
       age: friend.age,
       email: friend.email,
       update: true,
       activeFriend: friend.id,
     })
+  }
+
+  updateFriend = (e) => {
+    e.preventDefault();
+    const changeFriend = {
+      id: this.state.id,
+      name: this.state.name,
+      age: Number(this.state.age),
+      email: this.state.email
+    }
+    axios.put(`http://localhost:5000/friends/${changeFriend.id}`, changeFriend)
+    .then(res => {
+      this.setState({
+        friends: res.data,
+        name: "",
+        id: '',
+        age: '',
+        email: ''
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }
 
   resetUpdateField = (e) => {
@@ -125,9 +147,11 @@ class App extends Component {
             name={this.state.name}
             age={this.state.age}
             email={this.state.email} 
+            update={this.state.update}
             handleChange={this.handleChange}
             handleAddFriend={this.handleAddFriend}
             resetUpdateField={this.resetUpdateField}
+            updateFriend={this.updateFriend}
             />
         </div>
       </div>

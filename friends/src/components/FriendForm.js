@@ -36,9 +36,13 @@ function FriendForm(props) {
           className="form-control"
           />
       </div>  
-      <button onClick={props.handleAddFriend} className="btn btn-success">Add</button>
-      <button onClick={props.updateFriend} className="btn btn-info">Change</button>
-      <button onClick={props.resetUpdateField} className="btn btn-danger">Back</button>
+      {props.update ? 
+        <div className="form-btns">
+          <button onClick={(e) => props.updateFriend(e)} className="btn btn-info form-btn">Change</button>
+          <button onClick={props.resetUpdateField} className="btn btn-danger form-btn">Back</button>
+        </div> : 
+        <button onClick={props.handleAddFriend} className="btn btn-success form-btn">Add</button>
+        }
     </form>
   );
 }

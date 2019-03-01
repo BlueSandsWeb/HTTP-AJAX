@@ -39,6 +39,11 @@ html, body, .app {
   height: 100vh;
 }
 
+.form-btn {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
 
 .card-btn-container {
   display: flex;
